@@ -154,7 +154,7 @@ describe ApplicationController do
 
         fill_in(:username, :with => "becky567")
         fill_in(:password, :with => "kittens")
-        click_button 'submit'
+        click_button 'Submit'
         visit "/styles"
         expect(page.body).to include(style1.style_name)
         expect(page.body).to include(style2.style_name)
@@ -178,7 +178,7 @@ describe ApplicationController do
 
         fill_in(:username, :with => "becky567")
         fill_in(:password, :with => "kittens")
-        click_button 'submit'
+        click_button 'Submit'
         visit '/styles/new'
         expect(page.status_code).to eq(200)
       end
@@ -190,12 +190,12 @@ describe ApplicationController do
 
         fill_in(:username, :with => "becky567")
         fill_in(:password, :with => "kittens")
-        click_button 'submit'
+        click_button 'Submit'
 
         visit '/styles/new'
         fill_in(:style_name, :with => "leggings")
         fill_in(:size, :with => "TC2")
-        click_button 'submit'
+        click_button 'Submit'
 
         user = User.find_by(:username => "becky567")
         style = Style.find_by(:style_name => "leggings")
@@ -212,12 +212,12 @@ describe ApplicationController do
 
         fill_in(:username, :with => "becky567")
         fill_in(:password, :with => "kittens")
-        click_button 'submit'
+        click_button 'Submit'
 
         visit '/styles/new'
 
         fill_in(:style_name, :with => "leggings")
-        click_button 'submit'
+        click_button 'Submit'
 
         user = User.find_by(:id=> user.id)
         user2 = User.find_by(:id => user2.id)
@@ -234,13 +234,13 @@ describe ApplicationController do
 
         fill_in(:username, :with => "becky567")
         fill_in(:password, :with => "kittens")
-        click_button 'submit'
+        click_button 'Submit'
 
         visit '/styles/new'
 
         fill_in(:style_name, :with => "")
         fill_in(:size, :with => "")
-        click_button 'submit'
+        click_button 'Submit'
 
         expect(Style.find_by(:style_name => "")).to eq(nil)
         expect(Style.find_by(:size => "")).to eq(nil)
@@ -267,7 +267,7 @@ describe ApplicationController do
 
         fill_in(:username, :with => "becky567")
         fill_in(:password, :with => "kittens")
-        click_button 'submit'
+        click_button 'Submit'
 
         visit "/styles/#{style.id}"
         expect(page.status_code).to eq(200)
@@ -297,7 +297,7 @@ describe ApplicationController do
 
         fill_in(:username, :with => "becky567")
         fill_in(:password, :with => "kittens")
-        click_button 'submit'
+        click_button 'Submit'
         visit '/styles/1/edit'
         expect(page.status_code).to eq(200)
         expect(page.body).to include(style.style_name)
@@ -315,7 +315,7 @@ describe ApplicationController do
 
         fill_in(:username, :with => "becky567")
         fill_in(:password, :with => "kittens")
-        click_button 'submit'
+        click_button 'Submit'
         visit "/styles/#{style2.id}/edit"
         expect(page.current_path).to include('/styles')
       end
@@ -327,7 +327,7 @@ describe ApplicationController do
 
         fill_in(:username, :with => "becky567")
         fill_in(:password, :with => "kittens")
-        click_button 'submit'
+        click_button 'Submit'
         visit '/styles/1/edit'
 
         fill_in(:style_name, :with => "unicorn")
@@ -345,7 +345,7 @@ describe ApplicationController do
 
         fill_in(:username, :with => "becky567")
         fill_in(:password, :with => "kittens")
-        click_button 'submit'
+        click_button 'Submit'
         visit '/styles/1/edit'
 
         fill_in(:style_name, :with => "")
@@ -373,7 +373,7 @@ describe ApplicationController do
 
         fill_in(:username, :with => "becky567")
         fill_in(:password, :with => "kittens")
-        click_button 'submit'
+        click_button 'Submit'
         visit 'styles/1'
         click_button "Delete Style"
         expect(page.status_code).to eq(200)
@@ -391,7 +391,7 @@ describe ApplicationController do
 
         fill_in(:username, :with => "becky567")
         fill_in(:password, :with => "kittens")
-        click_button 'submit'
+        click_button 'Submit'
         visit "styles/#{style2.id}"
         click_button "Delete Style"
         expect(page.status_code).to eq(200)
