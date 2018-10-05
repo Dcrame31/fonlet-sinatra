@@ -126,6 +126,286 @@ describe ApplicationController do
       click_button 'Submit'
       expect(page.current_path).to eq('/styles')
     end
+  end
+
+  describe 'user show page' do
+    it 'shows all a single users styles' do
+      user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
+      style1 = Style.create(:style_name => "Perfect T", :size => "M", :user_id => user.id)
+      style2 = Style.create(:style_name => "Classic T", :size => "M", :user_id => user.id)
+      get "/users/#{user.slug}"
+
+      expect(last_response.body).to include("Perfect T")
+      expect(last_response.body).to include("Classic T")
+
     end
   end
 
+  describe 'index action' do
+    context 'logged in' do
+      it 'lets a user view the styles index if logged in' do
+        user1 = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
+        style1 = Style.create(:style_name => "Perfect T", :size => "M", :user_id => user1.id)
+
+        user2 = User.create(:username => "silverstallion", :email => "silver@aol.com", :password => "horses")
+        style2 = Style.create(:style_name => "Classic T", :size => "L", :user_id => user2.id)
+
+        visit '/login'
+
+        fill_in(:username, :with => "becky567")
+        fill_in(:password, :with => "kittens")
+        click_button 'submit'
+        visit "/styles"
+        expect(page.body).to include(style1.style_name)
+        expect(page.body).to include(style2.style_name)
+      end
+    end
+
+    context 'logged out' do
+      it 'does not let a user view the styles index if not logged in' do
+        get '/styles'
+        expect(last_response.location).to include("/login")
+      end
+    end
+  end
+
+  describe 'new action' do
+    context 'logged in' do
+      it 'lets user view new style form if logged in' do
+        user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
+
+        visit '/login'
+
+        fill_in(:username, :with => "becky567")
+        fill_in(:password, :with => "kittens")
+        click_button 'submit'
+        visit '/styles/new'
+        expect(page.status_code).to eq(200)
+      end
+
+      it 'lets user create a style if they are logged in' do
+        user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
+
+        visit '/login'
+
+        fill_in(:username, :with => "becky567")
+        fill_in(:password, :with => "kittens")
+        click_button 'submit'
+
+        visit '/styles/new'
+        fill_in(:style_name, :with => "leggings")
+        fill_in(:size, :with => "TC2")
+        click_button 'submit'
+
+        user = User.find_by(:username => "becky567")
+        style = Style.find_by(:style_name => "leggings")
+        expect(style).to be_instance_of(Style)
+        expect(style.user_id).to eq(user.id)
+        expect(page.status_code).to eq(200)
+      end
+
+      it 'does not let a user create style for another user' do
+        user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
+        user2 = User.create(:username => "silverstallion", :email => "silver@aol.com", :password => "horses")
+
+        visit '/login'
+
+        fill_in(:username, :with => "becky567")
+        fill_in(:password, :with => "kittens")
+        click_button 'submit'
+
+        visit '/styles/new'
+
+        fill_in(:style_name, :with => "leggings")
+        click_button 'submit'
+
+        user = User.find_by(:id=> user.id)
+        user2 = User.find_by(:id => user2.id)
+        style = Style.find_by(:style_name => "leggings")
+        expect(style).to be_instance_of(Style)
+        expect(style.user_id).to eq(user.id)
+        expect(style.user_id).not_to eq(user2.id)
+      end
+
+      it 'does not let a user create a blank style' do
+        user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
+
+        visit '/login'
+
+        fill_in(:username, :with => "becky567")
+        fill_in(:password, :with => "kittens")
+        click_button 'submit'
+
+        visit '/styles/new'
+
+        fill_in(:style_name, :with => "")
+        fill_in(:size, :with => "")
+        click_button 'submit'
+
+        expect(Style.find_by(:style_name => "")).to eq(nil)
+        expect(Style.find_by(:size => "")).to eq(nil)
+        expect(page.current_path).to eq("/styles/new")
+      end
+    end
+
+    context 'logged out' do
+      it 'does not let user view new style form if not logged in' do
+        get '/styles/new'
+        expect(last_response.location).to include("/login")
+      end
+    end
+  end
+
+  describe 'show action' do
+    context 'logged in' do
+      it 'displays a single style' do
+
+        user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
+        style = Style.create(:style_name => "unicorn", :size => "XXS", :user_id => user.id)
+
+        visit '/login'
+
+        fill_in(:username, :with => "becky567")
+        fill_in(:password, :with => "kittens")
+        click_button 'submit'
+
+        visit "/styles/#{style.id}"
+        expect(page.status_code).to eq(200)
+        expect(page.body).to include("Delete Style")
+        expect(page.body).to include(style.style_name)
+        expect(page.body).to include(style.size)
+        expect(page.body).to include("Edit Style")
+      end
+    end
+
+    context 'logged out' do
+      it 'does not let a user view a style' do
+        user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
+        style = Style.create(:style_name => "unicorn", :size => "XXS", :user_id => user.id)
+        get "/styles/#{style.id}"
+        expect(last_response.location).to include("/login")
+      end
+    end
+  end
+
+  describe 'edit action' do
+    context "logged in" do
+      it 'lets a user view style edit form if they are logged in' do
+        user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
+        style = Style.create(:style_name => "Perfect T", :size => "M", :user_id => user.id)
+        visit '/login'
+
+        fill_in(:username, :with => "becky567")
+        fill_in(:password, :with => "kittens")
+        click_button 'submit'
+        visit '/styles/1/edit'
+        expect(page.status_code).to eq(200)
+        expect(page.body).to include(style.style_name)
+        expect(page.body).to include(style.size)
+      end
+
+      it 'does not let a user edit a style they did not create' do
+        user1 = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
+        style1 = Style.create(:style_name => "Perfect T", :size => "M", :user_id => user1.id)
+
+        user2 = User.create(:username => "silverstallion", :email => "silver@aol.com", :password => "horses")
+        style2 = Style.create(:style_name => "leggings", :size => "TC2", :user_id => user2.id)
+
+        visit '/login'
+
+        fill_in(:username, :with => "becky567")
+        fill_in(:password, :with => "kittens")
+        click_button 'submit'
+        visit "/styles/#{style2.id}/edit"
+        expect(page.current_path).to include('/styles')
+      end
+
+      it 'lets a user edit their own style if they are logged in' do
+        user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
+        style = Style.create(:style_name => "Perfect T", :size => "M", :user_id => 1)
+        visit '/login'
+
+        fill_in(:username, :with => "becky567")
+        fill_in(:password, :with => "kittens")
+        click_button 'submit'
+        visit '/styles/1/edit'
+
+        fill_in(:style_name, :with => "unicorn")
+
+        click_button 'submit'
+        expect(Style.find_by(:style_name => "unicorn")).to be_instance_of(Style)
+        expect(Style.find_by(:style_name => "Perfect T")).to eq(nil)
+        expect(page.status_code).to eq(200)
+      end
+
+      it 'does not let a user edit a text with a blank style name' do
+        user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
+        style = Style.create(:style_name => "Perfect T", :size => "M", :user_id => 1)
+        visit '/login'
+
+        fill_in(:username, :with => "becky567")
+        fill_in(:password, :with => "kittens")
+        click_button 'submit'
+        visit '/styles/1/edit'
+
+        fill_in(:style_name, :with => "")
+
+        click_button 'submit'
+        expect(Style.find_by(:style_name => "unicorn")).to be(nil)
+        expect(page.current_path).to eq("/styles/1/edit")
+      end
+    end
+
+    context "logged out" do
+      it 'does not load -- instead redirects to login' do
+        get '/styles/1/edit'
+        expect(last_response.location).to include("/login")
+      end
+    end
+  end
+
+  describe 'delete action' do
+    context "logged in" do
+      it 'lets a user delete their own style if they are logged in' do
+        user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
+        style = Style.create(:style_name => "Perfect T", :size => "M", :user_id => 1)
+        visit '/login'
+
+        fill_in(:username, :with => "becky567")
+        fill_in(:password, :with => "kittens")
+        click_button 'submit'
+        visit 'styles/1'
+        click_button "Delete Style"
+        expect(page.status_code).to eq(200)
+        expect(Style.find_by(:style_name => "Perfect T")).to eq(nil)
+      end
+
+      it 'does not let a user delete a style they did not create' do
+        user1 = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
+        style1 = Style.create(:style_name => "Perfect T", :size => "M", :user_id => user1.id)
+
+        user2 = User.create(:username => "silverstallion", :email => "silver@aol.com", :password => "horses")
+        style2 = Style.create(:style_name => "look at this style", :user_id => user2.id)
+
+        visit '/login'
+
+        fill_in(:username, :with => "becky567")
+        fill_in(:password, :with => "kittens")
+        click_button 'submit'
+        visit "styles/#{style2.id}"
+        click_button "Delete Style"
+        expect(page.status_code).to eq(200)
+        expect(Style.find_by(:style_name => "look at this style")).to be_instance_of(Style)
+        expect(page.current_path).to include('/styles')
+      end
+    end
+
+    context "logged out" do
+      it 'does not load let user delete a style if not logged in' do
+        style = Style.create(:style_name => "Perfect T", :size => "M", :user_id => 1)
+        visit '/styles/1'
+        expect(page.current_path).to eq("/login")
+      end
+    end
+  end
+end
