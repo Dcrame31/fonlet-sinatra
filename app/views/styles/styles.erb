@@ -2,7 +2,7 @@
 <h3>Available Inventory - Happy Shopping!</h3>
 
 <% @style.each do |style| %>
-  Style: <%= style.style_name %><br>
-  Size: <%= style.size %><br>
+  <%= style.style_name %> (<%= style.size %>)<br>
+  by <%= style.user.username.upcase %><br>
   <br>
 <% end %>
