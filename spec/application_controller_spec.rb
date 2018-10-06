@@ -217,6 +217,7 @@ describe ApplicationController do
         visit '/styles/new'
 
         fill_in(:style_name, :with => "leggings")
+        fill_in(:size, :with => "TC2")
         click_button 'Submit'
 
         user = User.find_by(:id=> user.id)
