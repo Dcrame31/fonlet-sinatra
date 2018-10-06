@@ -1,7 +1,6 @@
 <h2><%= @user.slug %>'s Inventory</h2>
 
 <% @user.styles.each do |style| %>
-  Style: <%= style.style_name %><br>
-  Size: <%= style.size %><br>
+  <%= style.style_name %> (<%= style.size %>)<br>
   <br>
 <% end %>

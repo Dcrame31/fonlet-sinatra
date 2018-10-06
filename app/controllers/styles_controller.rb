@@ -22,14 +22,35 @@ class StylesController < ApplicationController
       redirect '/styles/new'
     else
       @style = Style.create(style_name: params[:style_name], size: params[:size], user_id: session[:user_id])
-      # binding.pry
     end
       redirect '/styles'
   end
 
-  # get '/styles/:id' do
-  #   @style = Style.find_by_id(params[:id])
-  #   erb :'styles/styles'
-  # end
+  get '/styles/:id' do
+    if logged_in?
+      @style = Style.find_by_id(params[:id])
+      erb :'styles/show_style'
+    else
+      redirect '/login'
+    end
+  end
+
+  get '/styles/:id/edit' do
+    if logged_in?
+      @style = Style.find_by_id(params[:id])
+      erb :'styles/edit_style'
+    else
+      redirect '/login'
+    end
+  end
+
+  patch '/styles/:id' do
+    @style = Style.find_by_id(params[:id])
+    if params[:style_name] == "" || params[:size] == ""
+      redirect "/styles/#{@style.id}/edit"
+    else
+      @style.update(style_name: params[:style_name], size: params[:size])
+    end
+  end
 
 end

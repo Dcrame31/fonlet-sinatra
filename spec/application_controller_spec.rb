@@ -272,10 +272,10 @@ describe ApplicationController do
 
         visit "/styles/#{style.id}"
         expect(page.status_code).to eq(200)
-        expect(page.body).to include("Delete Style")
+        expect(page.body).to include("Claim/Delete")
         expect(page.body).to include(style.style_name)
         expect(page.body).to include(style.size)
-        expect(page.body).to include("Edit Style")
+        expect(page.body).to include("Edit")
       end
     end
 
@@ -333,7 +333,7 @@ describe ApplicationController do
 
         fill_in(:style_name, :with => "unicorn")
 
-        click_button 'submit'
+        click_button 'Submit'
         expect(Style.find_by(:style_name => "unicorn")).to be_instance_of(Style)
         expect(Style.find_by(:style_name => "Perfect T")).to eq(nil)
         expect(page.status_code).to eq(200)
@@ -351,7 +351,7 @@ describe ApplicationController do
 
         fill_in(:style_name, :with => "")
 
-        click_button 'submit'
+        click_button 'Submit'
         expect(Style.find_by(:style_name => "unicorn")).to be(nil)
         expect(page.current_path).to eq("/styles/1/edit")
       end
@@ -376,7 +376,7 @@ describe ApplicationController do
         fill_in(:password, :with => "kittens")
         click_button 'Submit'
         visit 'styles/1'
-        click_button "Delete Style"
+        click_button "Claim/Delete"
         expect(page.status_code).to eq(200)
         expect(Style.find_by(:style_name => "Perfect T")).to eq(nil)
       end
@@ -394,7 +394,7 @@ describe ApplicationController do
         fill_in(:password, :with => "kittens")
         click_button 'Submit'
         visit "styles/#{style2.id}"
-        click_button "Delete Style"
+        click_button "Claim/Delete"
         expect(page.status_code).to eq(200)
         expect(Style.find_by(:style_name => "look at this style")).to be_instance_of(Style)
         expect(page.current_path).to include('/styles')

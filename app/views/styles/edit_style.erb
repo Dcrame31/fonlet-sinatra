@@ -1,1 +1,11 @@
-<h1>Insert the form to edit an instance of your model here.</h1>
+<h2>Edit Inventory</h2>
+
+<form action="/styles/<%= @style.id %>" method="post">
+  <input id="hidden" type="hidden" name="_method" value="patch">
+  <label for="style_name">Style Name</label>
+  <p><input type="text" name="style_name" id="style_name" value="<%= @style.style_name %>"></p>
+
+  <label for="style_name">Size</label>
+  <p><input type="text" name="size" id="size" value="<%= @style.size %>"></p>
+  <input type="submit" value="Submit">
+</form>
