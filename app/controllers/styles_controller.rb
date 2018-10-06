@@ -53,4 +53,13 @@ class StylesController < ApplicationController
     end
   end
 
+  delete '/styles/:id/delete' do
+    if logged_in?
+      @style = Style.find_by_id(params[:id])
+      if @style.user == current_user
+        @style.delete
+      end
+    end
+  end
+
 end
