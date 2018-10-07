@@ -77,7 +77,7 @@ describe ApplicationController do
       expect(last_response.status).to eq(302)
       follow_redirect!
       expect(last_response.status).to eq(200)
-      expect(last_response.body).to include("Hello,")
+      expect(last_response.body).to include("Available Inventory")
     end
 
     it 'does not let user view login page if already logged in' do
@@ -272,7 +272,7 @@ describe ApplicationController do
 
         visit "/styles/#{style.id}"
         expect(page.status_code).to eq(200)
-        expect(page.body).to include("Claim/Delete")
+        expect(page.body).to include("Sold/Delete")
         expect(page.body).to include(style.style_name)
         expect(page.body).to include(style.size)
         expect(page.body).to include("Edit")
@@ -376,7 +376,7 @@ describe ApplicationController do
         fill_in(:password, :with => "kittens")
         click_button 'Submit'
         visit 'styles/1'
-        click_button "Claim/Delete"
+        click_button "Sold/Delete"
         expect(page.status_code).to eq(200)
         expect(Style.find_by(:style_name => "Perfect T")).to eq(nil)
       end
@@ -394,7 +394,7 @@ describe ApplicationController do
         fill_in(:password, :with => "kittens")
         click_button 'Submit'
         visit "styles/#{style2.id}"
-        click_button "Claim/Delete"
+        click_button "Sold/Delete"
         expect(page.status_code).to eq(200)
         expect(Style.find_by(:style_name => "look at this style")).to be_instance_of(Style)
         expect(page.current_path).to include('/styles')
