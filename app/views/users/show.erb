@@ -1,8 +1,8 @@
 <h2><%= @user.slug %>'s Inventory</h2>
-<h3><a href="/styles/new">Add Inventory</a></h3>
+<h3><a href="/styles/new">Add Inventory</a></h3><br>
 
 <% @user.styles.each do |style| %>
   <%= style.style_name %> (<%= style.size %>)
   <a href="/styles/<%=style.id%>">Edit/Delete</a>
-  <br>
+  <br><br>
 <% end %>

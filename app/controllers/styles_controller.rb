@@ -23,7 +23,7 @@ class StylesController < ApplicationController
     else
       @style = Style.create(style_name: params[:style_name], size: params[:size], user_id: session[:user_id])
     end
-      redirect '/styles'
+      redirect "/users/#{current_user.slug}"
   end
 
   get '/styles/:id' do
@@ -56,7 +56,7 @@ class StylesController < ApplicationController
       redirect "/styles/#{@style.id}/edit"
     else
       @style.update(style_name: params[:style_name], size: params[:size])
-      redirect "/styles/#{@style.id}"
+      redirect "/users/#{current_user.slug}"
     end
   end
 
