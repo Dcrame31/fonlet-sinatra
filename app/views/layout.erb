@@ -19,8 +19,8 @@
     <div class="wrapper">
       <% if logged_in? %>
         <div class="topnav">
-          <a href="/styles">Home</a>
-          <a href="/styles/new">Add</a>
+          <a href="/styles">Shop</a>
+          <a href="/users/<%= current_user.slug %>">My Inventory</a>
           <a href="/logout">Logout</a>
           <div>Hello <%= current_user.username %>!</div>
         </div>
