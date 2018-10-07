@@ -38,7 +38,13 @@ class StylesController < ApplicationController
   get '/styles/:id/edit' do
     if logged_in?
       @style = Style.find_by_id(params[:id])
-      erb :'styles/edit_style'
+
+      if @style.user == current_user
+        erb :'styles/edit_style'
+      else
+        redirect "/styles/#{@style.id}"
+      end
+
     else
       redirect '/login'
     end
@@ -50,15 +56,22 @@ class StylesController < ApplicationController
       redirect "/styles/#{@style.id}/edit"
     else
       @style.update(style_name: params[:style_name], size: params[:size])
+      redirect "/styles/#{@style.id}"
     end
   end
 
   delete '/styles/:id/delete' do
     if logged_in?
       @style = Style.find_by_id(params[:id])
+
       if @style.user == current_user
         @style.delete
+      else
+        redirect "/styles/#{@style.id}"
       end
+
+    else
+      redirect '/login'
     end
   end
 
