@@ -66,6 +66,7 @@ class StylesController < ApplicationController
 
       if @style.user == current_user
         @style.delete
+        redirect '/styles'
       else
         redirect "/styles/#{@style.id}"
       end
