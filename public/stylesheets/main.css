@@ -126,6 +126,28 @@
     margin-top: 20px;
     padding-top: 20px;
   }
+
+  /* sinatra-flash styling */
+  .success {
+    background: #dff0d8;
+    color: #468847;
+    border: 1px solid #d6e9c6;
+    animation: cssAnimation 0s 5s forwards;
+    visibility: visible;
+  }
+  .error {
+    background: #f2dede;
+    color: #b94a48;
+    border: 1px solid #eed3d7;
+    animation: cssAnimation 0s 5s forwards;
+    visibility: visible;
+  }
+
+  @keyframes cssAnimation {
+    to {
+      visibility: hidden;
+    }
+  }
 }
 
 @media screen and (max-width: 600px) {
