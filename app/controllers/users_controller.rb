@@ -14,7 +14,7 @@ class UsersController < ApplicationController
       redirect '/signup'
     elsif
       @user = User.find_by(username: params[:username])
-      @user.username == params[:username]
+      @user.username.eql?(params[:username])
       flash[:error] = "Username already exists."
       redirect '/signup'
 
