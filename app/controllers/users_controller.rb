@@ -12,6 +12,12 @@ class UsersController < ApplicationController
     if params[:username].empty? || params[:email].empty? || params[:password].empty?
       flash[:error] = "Signup fields cannot be blank."
       redirect '/signup'
+    elsif
+      @user = User.find_by(username: params[:username])
+      @user.username == params[:username]
+      flash[:error] = "Username already exists."
+      redirect '/signup'
+
     else
       @user = User.create(username: params[:username], email: params[:email], password: params[:password])
       session[:user_id] = @user.id
