@@ -17,7 +17,10 @@ class UsersController < ApplicationController
       @user.username.eql?(params[:username])
       flash[:error] = "Username already exists."
       redirect '/signup'
-
+    elsif
+      params[:password] != params[:confirmation]
+      flash[:error] = "Passwords must match."
+      redirect '/signup'
     else
       @user = User.create(username: params[:username], email: params[:email], password: params[:password])
       session[:user_id] = @user.id
