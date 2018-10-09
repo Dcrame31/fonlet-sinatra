@@ -9,11 +9,13 @@ class UsersController < ApplicationController
   end
 
   post '/signup' do
-    if params[:username] == "" || params[:email] == "" || params[:password] == ""
+    if params[:username].empty? || params[:email].empty? || params[:password].empty?
+      flash[:error] = "Signup fields cannot be blank."
       redirect '/signup'
     else
       @user = User.create(username: params[:username], email: params[:email], password: params[:password])
       session[:user_id] = @user.id
+      flash[:success] = "New user created successfully."
       redirect '/styles'
     end
   end
@@ -28,6 +30,7 @@ class UsersController < ApplicationController
 
   get '/logout' do
     session.clear
+    flash[:success] = "Successfully logged out."
     redirect '/login'
   end
 
@@ -37,6 +40,7 @@ class UsersController < ApplicationController
       session[:user_id] = @user.id
       redirect '/styles'
     else
+      flash[:error] = "Incorrect username and/or password."
       redirect '/login'
     end
   end
