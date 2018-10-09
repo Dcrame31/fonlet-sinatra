@@ -1,10 +1,10 @@
 # Fonlet-Sinatra
 
-
+This Sinatra app is a simplified inventory tracking app for direct sales businesses modelled after Sonlet.
 
 ## Installation
 
-
+Fork or clone this repo, run bundle install and rake db:migrate. Use rackup or shotgun to start an application server.
 
 ## Contributing
 
@@ -13,7 +13,3 @@ Bug reports and pull requests are welcome on GitHub at <https://github.com/lulab
 ## License
 
 The project is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct].
