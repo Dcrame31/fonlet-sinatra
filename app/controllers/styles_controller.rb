@@ -58,6 +58,9 @@ class StylesController < ApplicationController
     if params[:style_name].empty? || params[:size].empty?
       flash[:error] = "Style name and/or size cannot be blank."
       redirect "/styles/#{@style.id}/edit"
+    elsif @style.user != current_user
+      flash[:error] = "You cannot edit another retailer's inventory."
+      redirect "/styles/#{@style.id}"
     else
       @style.update(style_name: params[:style_name], size: params[:size])
       flash[:success] = "Style updated successfully."
