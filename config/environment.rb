@@ -11,7 +11,7 @@ ActiveRecord::Base.establish_connection(
 end
 
 configure :production do
-  db = URI.parse(ENV['DATABASE_URL'] || 'postgres://localhost/fonlet_db')
+  db = URI.parse(ENV['DATABASE_URL'] || 'postgres://rztxhqvjwhiytt:0a9c198e943772fb4d87e459c9db6d2d77dccb5d50eedc339477c6857b4e0039@ec2-23-23-184-76.compute-1.amazonaws.com:5432/db7j7ut83j9qv5')
 
   ActiveRecord::Base.establish_connection(
     :adapter  => db.scheme == 'postgres' ? 'postgresql' : db.scheme,
