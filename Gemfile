@@ -8,6 +8,7 @@ gem 'require_all'
 gem 'thin'
 gem 'bcrypt'
 gem "sinatra-flash"
+ruby "~> 2.3.0"
 
 group :development do
   gem 'shotgun'
